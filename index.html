@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SODAMCS — Smart Object Detection & Adaptive Motor Control System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============== HEADER ============== -->
+  <header class="app-header">
+    <div class="hdr-inner">
+      <div class="brand">
+        <div class="brand-badge">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg>
+          <span>SODAMCS</span>
+        </div>
+        <div class="brand-sub">
+          <p>SMART OBJECT DETECTION &amp; ADAPTIVE</p>
+          <p>MOTOR CONTROL SYSTEM • ESP-12F</p>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-page="dashboard">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          DASHBOARD
+        </button>
+        <button class="nav-tab" data-page="sampling">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="3" x2="3" y2="21"/><line x1="3" y1="21" x2="21" y2="21"/><rect x="7" y="13" width="3" height="6"/><rect x="13" y="9" width="3" height="10"/><rect x="19" y="5" width="0.1" height="14"/></svg>
+          SAMPLING MODE
+        </button>
+        <button class="nav-tab" data-page="settings">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          SETTING MODE
+        </button>
+      </nav>
+
+      <div class="conn-pills">
+        <div id="pill-mqtt" class="pill pill-off">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4M7.8 16.2a6 6 0 0 1 0-8.4M19 5a10 10 0 0 1 0 14M5 19A10 10 0 0 1 5 5"/></svg>
+          MQTT <span id="pill-mqtt-text">OFF</span>
+        </div>
+        <div id="pill-esp" class="pill pill-err">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.7 13.3a5 5 0 0 0-1.4-1M5 12.5a10 10 0 0 1 5.2-2.8M9.5 16.5a5 5 0 0 1 5-1M2 8.8a15 15 0 0 1 4.2-2.5M22 8.8a15 15 0 0 0-3.6-2.4M8.5 16.5L12 20l1.5-1.5"/></svg>
+          ESP <span id="pill-esp-text">OFF</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============== MAIN ============== -->
+  <main class="app-main">
+
+    <!-- ===== DASHBOARD PAGE ===== -->
+    <div id="page-dashboard" class="page active">
+      <h1 class="page-title">Smart Object Detection &amp; Adaptive Motor Control System</h1>
+      <p class="page-sub">ESP-12F • MULTI-SENSOR FUSION • KALMAN FILTER • MQTT • PWM ADAPTIVE BRAKE</p>
+
+      <!-- Section 01 -->
+      <section class="section">
+        <div class="section-title"><span class="sec-idx">01</span><h2>KONEKSI MQTT</h2><div class="sep"></div></div>
+        <div class="grid-3">
+          <!-- MQTT card -->
+          <div class="card span-2">
+            <div class="card-head">
+              <div class="head-l">
+                <div class="ico-box ico-cyan">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.5a10 10 0 0 1 14 0M2 8.8a15 15 0 0 1 20 0M8.5 16.2a5 5 0 0 1 7 0M12 20l.01 0"/></svg>
+                </div>
+                <div>
+                  <p class="lbl">KONEKSI MQTT</p>
+                  <p class="ttl">Broker → ESP-12F</p>
+                </div>
+              </div>
+              <span id="mqtt-badge" class="badge badge-muted">TERPUTUS</span>
+            </div>
+
+            <div class="grid-2 gap-12">
+              <div class="field">
+                <label>BROKER HOST</label>
+                <input id="in-broker" type="text" value="broker.hivemq.com" />
+              </div>
+              <div class="field">
+                <label>PORT</label>
+                <input id="in-port" type="number" value="1883" />
+              </div>
+              <div class="field">
+                <label>CLIENT ID</label>
+                <input id="in-client" type="text" value="esp12f-sodamcs" />
+              </div>
+              <div class="field">
+                <label>TOPIC</label>
+                <input id="in-topic" type="text" value="iot/sodamcs/data" />
+              </div>
+            </div>
+
+            <button id="btn-connect" class="btn btn-primary btn-full">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span id="btn-connect-text">SAMBUNGKAN KE BROKER</span>
+            </button>
+          </div>
+
+          <!-- Threshold card -->
+          <div class="card">
+            <div class="card-head">
+              <div class="head-l">
+                <div class="ico-box ico-amber">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4M12 16h.01"/></svg>
+                </div>
+                <div>
+                  <p class="lbl">PENGEREMAN DARURAT</p>
+                  <p class="ttl">Threshold Jarak Aman</p>
+                </div>
+              </div>
+              <span id="thr-badge" class="badge badge-emerald">AMAN</span>
+            </div>
+
+            <div class="field">
+              <div class="row-between">
+                <label>THRESHOLD (CM)</label>
+                <input id="in-threshold" type="number" min="2" max="200" value="20" class="thr-num" />
+              </div>
+              <input id="thr-slider" type="range" min="2" max="200" value="20" />
+              <div class="row-between micro">
+                <span>2 cm</span><span>100 cm</span><span>200 cm</span>
+              </div>
+            </div>
+
+            <div class="thr-info">
+              <div class="row-between"><span>Jarak terbaca</span><span id="thr-current">—</span></div>
+              <div class="row-between"><span>Status</span><span id="thr-status" class="ok">menunggu data…</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 02 -->
+      <section class="section">
+        <div class="section-title"><span class="sec-idx">02</span><h2>AKUISISI DATA SENSOR</h2><div class="sep"></div></div>
+        <div class="grid-2">
+          <!-- HC-SR04 -->
+          <div class="card">
+            <div class="card-head">
+              <div class="head-l">
+                <div id="us-ico" class="ico-box ico-muted">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 12L8 8M12 12l4 4"/></svg>
+                </div>
+                <div><p class="lbl">SENSOR DIGITAL</p><p class="ttl">HC-SR04 Ultrasonik</p></div>
+              </div>
+              <span id="us-badge" class="badge badge-muted">OFF</span>
+            </div>
+            <div class="big-reading"><span id="us-val">--</span><span class="unit">cm</span><span id="us-stream" class="stream-tag hide">streaming</span></div>
+            <div class="grid-3 gap-6">
+              <div class="meta"><p>TIPE</p><b>Digital</b></div>
+              <div class="meta"><p>RANGE</p><b>2–400</b></div>
+              <div class="meta"><p>TRIGGER</p><b>D5/D6</b></div>
+            </div>
+            <button id="btn-us" class="btn btn-secondary btn-full" disabled>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+              <span id="btn-us-text">AKTIFKAN HC-SR04</span>
+            </button>
+          </div>
+
+          <!-- GP2Y0A21 -->
+          <div class="card">
+            <div class="card-head">
+              <div class="head-l">
+                <div id="ir-ico" class="ico-box ico-muted">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <div><p class="lbl">SENSOR ANALOG</p><p class="ttl">Sharp GP2Y0A21</p></div>
+              </div>
+              <span id="ir-badge" class="badge badge-muted">OFF</span>
+            </div>
+            <div class="big-reading"><span id="ir-val">--</span><span class="unit">cm</span><span id="ir-stream" class="stream-tag hide">streaming</span></div>
+            <div class="grid-3 gap-6">
+              <div class="meta"><p>TIPE</p><b>Analog</b></div>
+              <div class="meta"><p>A0 VOLT</p><b id="ir-volt">0.00V</b></div>
+              <div class="meta"><p>RANGE</p><b>10–80</b></div>
+            </div>
+            <button id="btn-ir" class="btn btn-secondary btn-full" disabled>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+              <span id="btn-ir-text">AKTIFKAN GP2Y0A21</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 03 -->
+      <section class="section">
+        <div class="section-title"><span class="sec-idx">03</span><h2>FUSI &amp; FILTERING DATA</h2><div class="sep"></div></div>
+        <div class="card">
+          <div class="card-head">
+            <div class="head-l">
+              <div id="flt-ico" class="ico-box ico-muted">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="4" x2="14" y2="4"/><line x1="10" y1="4" x2="3" y2="4"/><line x1="21" y1="12" x2="12" y2="12"/><line x1="8" y1="12" x2="3" y2="12"/><line x1="21" y1="20" x2="16" y2="20"/><line x1="12" y1="20" x2="3" y2="20"/><line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/></svg>
+              </div>
+              <div><p class="lbl">VISUALISASI</p><p class="ttl">Filtering</p></div>
+            </div>
+            <div class="head-r">
+              <span id="fusion-pill" class="pill-tag">TIDAK ADA INPUT</span>
+              <span id="flt-badge" class="badge badge-muted">FILTER OFF</span>
+            </div>
+          </div>
+
+          <div class="grid-3 gap-12">
+            <div class="reading-tile" data-color="cyan">
+              <div class="rt-head"><span class="dot dot-cyan"></span><p>HC-SR04</p></div>
+              <div class="rt-val"><span id="rt-us">--</span><span>cm</span></div>
+            </div>
+            <div class="reading-tile" data-color="purple">
+              <div class="rt-head"><span class="dot dot-purple"></span><p>GP2Y0A21</p></div>
+              <div class="rt-val"><span id="rt-ir">--</span><span>cm</span></div>
+            </div>
+            <div class="reading-tile highlight">
+              <div class="rt-head"><span class="dot dot-gold"></span><p>KALMAN FILTER</p></div>
+              <div class="rt-val highlight"><span id="rt-flt">--</span><span>cm</span></div>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="combined-chart" height="260"></canvas>
+            <div id="chart-empty" class="chart-empty">ESP-12F belum terhubung</div>
+            <div class="legend">
+              <span><span class="dot dot-cyan"></span> HC-SR04 (raw)</span>
+              <span><span class="dot dot-purple"></span> GP2Y0A21 (raw)</span>
+              <span><span class="dot dot-gold"></span> Kalman Filter</span>
+            </div>
+          </div>
+
+          <button id="btn-filter" class="btn btn-primary btn-full" disabled>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+            <span id="btn-filter-text">ENABLE KALMAN FILTER</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Section 04 -->
+      <section class="section">
+        <div class="section-title"><span class="sec-idx">04</span><h2>AKTUATOR</h2><div class="sep"></div></div>
+
+        <!-- Motor card -->
+        <div class="card mb-12">
+          <div class="card-head">
+            <div class="head-l">
+              <div id="motor-ico" class="ico-box ico-muted">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3 1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8 1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+              </div>
+              <div><p class="lbl">MOTOR DC + IRLZ44N</p><p class="ttl">Adaptive Speed Control</p></div>
+            </div>
+            <span id="motor-badge" class="badge badge-muted">STOPPED</span>
+          </div>
+
+          <div class="grid-2 gap-12">
+            <div class="motor-tile">
+              <div class="row-between">
+                <p class="lbl">PWM DUTY CYCLE</p>
+                <span id="motor-pwm" class="big-num">0<span>%</span></span>
+              </div>
+              <div class="bar"><div id="motor-bar" class="bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="motor-tile motor-rpm">
+              <div>
+                <p class="lbl">MOTOR SPEED</p>
+                <p id="motor-rpm" class="big-num">0<span>RPM</span></p>
+              </div>
+              <div id="motor-wheel" class="wheel">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3 1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8 1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div id="motor-info" class="info-strip">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span id="motor-info-text">ESP-12F belum terhubung.</span>
+          </div>
+        </div>
+
+        <!-- Relay status (Saklar Pemutus + LED) -->
+        <div class="card">
+          <div class="grid-2 gap-12">
+            <div id="saklar-tile" class="status-tile">
+              <div class="st-head">
+                <div class="st-head-l">
+                  <div id="saklar-ico" class="ico-box-sm ico-muted">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></svg>
+                  </div>
+                  <p class="lbl">STATUS</p>
+                </div>
+                <span id="saklar-badge" class="badge-sm badge-muted">STANDBY</span>
+              </div>
+              <p class="st-name">Saklar Pemutus</p>
+              <p id="saklar-state" class="st-val muted">TERHUBUNG</p>
+              <p id="saklar-desc" class="st-desc">Aliran daya ke motor tersambung normal.</p>
+            </div>
+
+            <div id="led-tile" class="status-tile">
+              <div class="st-head">
+                <div class="st-head-l">
+                  <div id="led-ico" class="ico-box-sm ico-muted">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c1 .8 1 1.5 1 2.3v1h6v-1c0-.8 0-1.5 1-2.3A7 7 0 0 0 12 2z"/></svg>
+                  </div>
+                  <p class="lbl">STATUS</p>
+                </div>
+                <span id="led-badge" class="badge-sm badge-muted">OFF</span>
+              </div>
+              <p class="st-name">LED Indikator</p>
+              <p id="led-state" class="st-val muted">MATI</p>
+              <p id="led-desc" class="st-desc">LED dalam keadaan padam — kondisi sistem normal.</p>
+            </div>
+          </div>
+
+          <div id="relay-info" class="info-strip">
+            <span id="relay-info-text">Sistem standby — menunggu data sensor untuk mulai memantau jarak aman.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 05 -->
+      <section class="section">
+        <div class="section-title"><span class="sec-idx">05</span><h2>LOG SISTEM</h2><div class="sep"></div></div>
+        <div class="card log-card">
+          <div class="log-head">
+            <p class="ttl">System Activity Log</p>
+            <button id="btn-clearlog" class="btn btn-ghost btn-sm">CLEAR</button>
+          </div>
+          <div id="log-list" class="log-list"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== SAMPLING PAGE ===== -->
+    <div id="page-sampling" class="page">
+      <h1 class="page-title">Sampling Mode</h1>
+      <p class="page-sub">RESEARCH DATA ACQUISITION • TIME / DISTANCE / SPEED TRIGGERED</p>
+
+      <div class="grid-3 gap-12">
+        <div class="card stat-tile">
+          <p class="lbl">TOTAL SAMPLES</p>
+          <p id="smp-total" class="big-num primary">0</p>
+        </div>
+        <div class="card stat-tile">
+          <p class="lbl">STATUS</p>
+          <p id="smp-status" class="big-num muted">IDLE</p>
+        </div>
+        <div class="card stat-tile">
+          <p class="lbl">TRIGGER MODE</p>
+          <p id="smp-mode-disp" class="big-num primary">TIME</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sec-idx">01</span><h2>KONFIGURASI SAMPLING</h2><div class="sep"></div></div>
+        <div class="card">
+          <div class="grid-2 gap-12">
+            <div class="field">
+              <label>MODE TRIGGER</label>
+              <div class="seg">
+                <button class="seg-btn active" data-mode="time">TIME</button>
+                <button class="seg-btn" data-mode="distance">DISTANCE</button>
+                <button class="seg-btn" data-mode="speed">SPEED</button>
+              </div>
+            </div>
+            <div class="field">
+              <label id="trig-param-label">INTERVAL (ms)</label>
+              <input id="trig-time" type="number" min="100" step="100" value="1000" />
+              <input id="trig-dist" type="number" min="1" step="1" value="5" class="hide" />
+              <input id="trig-spd"  type="number" min="1" step="1" value="10" class="hide" />
+            </div>
+          </div>
+
+          <div class="row gap-8">
+            <button id="btn-start" class="btn btn-primary" disabled>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              MULAI SAMPLING
+            </button>
+            <button id="btn-stop" class="btn btn-destructive hide">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12"/></svg>
+              HENTIKAN
+            </button>
+            <button id="btn-export" class="btn btn-secondary" disabled>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              EXPORT CSV
+            </button>
+            <button id="btn-clear" class="btn btn-ghost" disabled>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              KOSONGKAN
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sec-idx">02</span><h2>DATA SAMPLING</h2><div class="sep"></div></div>
+        <div class="card no-pad">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>TIMESTAMP</th>
+                  <th>HC-SR04 (cm)</th>
+                  <th>GP2Y0A21 (cm)</th>
+                  <th>FILTERED (cm)</th>
+                  <th>PWM (%)</th>
+                  <th>RPM</th>
+                  <th>RELAY</th>
+                </tr>
+              </thead>
+              <tbody id="smp-tbody">
+                <tr class="empty"><td colspan="8">Belum ada data — mulai sampling untuk mengisi tabel.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS PAGE ===== -->
+    <div id="page-settings" class="page">
+      <h1 class="page-title">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);vertical-align:-3px;margin-right:6px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3 1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8 1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        Setting Mode
+      </h1>
+      <p class="page-sub">LIVE TUNING KALMAN FILTER • MULTI-SENSOR FUSION PARAMETERS</p>
+
+      <!-- Status -->
+      <div class="card status-card">
+        <div class="row gap-12">
+          <span id="set-dot" class="dot-status"></span>
+          <div>
+            <p class="lbl">STATUS FILTER</p>
+            <p id="set-status" class="ttl">ESP-12F belum terhubung</p>
+          </div>
+        </div>
+        <div class="row gap-6">
+          <span class="lbl">AKTIF:</span>
+          <span class="set-pill"><span class="muted">Q=</span><b id="set-active-q">0.0500</b></span>
+          <span class="set-pill"><span class="muted">Rᵤ=</span><b id="set-active-ru">10.00</b></span>
+          <span class="set-pill"><span class="muted">Rᵢ=</span><b id="set-active-ri">5.00</b></span>
+        </div>
+      </div>
+
+      <!-- Tuning -->
+      <div class="section">
+        <div class="section-title"><span class="sec-idx">01</span><h2>TUNING PARAMETER KALMAN FILTER</h2><div class="sep"></div></div>
+        <div class="card">
+          <div class="card-head bordered-bottom">
+            <div class="head-l">
+              <div class="ico-box ico-primary">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="4" x2="14" y2="4"/><line x1="10" y1="4" x2="3" y2="4"/><line x1="21" y1="12" x2="12" y2="12"/><line x1="8" y1="12" x2="3" y2="12"/><line x1="21" y1="20" x2="16" y2="20"/><line x1="12" y1="20" x2="3" y2="20"/><line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/></svg>
+              </div>
+              <div><p class="lbl">LIVE TUNING</p><p class="ttl">Process &amp; Measurement Noise</p></div>
+            </div>
+          </div>
+
+          <!-- Q -->
+          <div class="param-row">
+            <div class="param-head">
+              <div class="row gap-12 start">
+                <div class="param-symbol primary">Q</div>
+                <div>
+                  <p class="param-label">Process Noise</p>
+                  <p class="param-desc">Mengontrol seberapa besar sistem mempercayai prediksi internal vs. pengukuran. Nilai kecil = trust prediksi (hasil halus, lambat reaksi). Nilai besar = trust pengukuran (responsif, lebih noisy).</p>
+                  <p class="param-meta">Range: 0.001 – 1 • Recommended: <b>0.05</b></p>
+                </div>
+              </div>
+              <input id="num-q" type="number" min="0.001" max="1" step="0.001" value="0.0500" class="param-num" />
+            </div>
+            <input id="sld-q" type="range" min="0.001" max="1" step="0.001" value="0.05" />
+          </div>
+
+          <!-- Ru -->
+          <div class="param-row">
+            <div class="param-head">
+              <div class="row gap-12 start">
+                <div class="param-symbol cyan">Rᵤ</div>
+                <div>
+                  <p class="param-label">Measurement Noise — Ultrasonic (HC-SR04)</p>
+                  <p class="param-desc">Variansi pengukuran sensor ultrasonik. HC-SR04 lebih akurat untuk jarak menengah, jadi nilai R relatif kecil. Nilai kecil = sensor dipercaya, hasil mengikuti pembacaan US.</p>
+                  <p class="param-meta">Range: 0.5 – 50 • Recommended: <b>10.0</b></p>
+                </div>
+              </div>
+              <input id="num-ru" type="number" min="0.5" max="50" step="0.5" value="10.00" class="param-num" />
+            </div>
+            <input id="sld-ru" type="range" min="0.5" max="50" step="0.5" value="10" />
+          </div>
+
+          <!-- Ri -->
+          <div class="param-row">
+            <div class="param-head">
+              <div class="row gap-12 start">
+                <div class="param-symbol purple">Rᵢ</div>
+                <div>
+                  <p class="param-label">Measurement Noise — Infrared (Sharp GP2Y0A21)</p>
+                  <p class="param-desc">Variansi pengukuran sensor inframerah analog. Sharp GP2Y0A21 unggul di jarak dekat. Sesuaikan nilai R relatif terhadap Rᵤ untuk menentukan bobot sensor mana yang lebih dipercaya.</p>
+                  <p class="param-meta">Range: 0.5 – 50 • Recommended: <b>5.0</b></p>
+                </div>
+              </div>
+              <input id="num-ri" type="number" min="0.5" max="50" step="0.5" value="5.00" class="param-num" />
+            </div>
+            <input id="sld-ri" type="range" min="0.5" max="50" step="0.5" value="5" />
+          </div>
+
+          <div class="row-between bordered-top pt-12">
+            <button id="btn-reset-kalman" class="btn btn-outline">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              RESET KE DEFAULT
+            </button>
+            <div class="row gap-12">
+              <span id="saved-flash" class="saved-flash hide">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                TERSIMPAN
+              </span>
+              <button id="btn-apply-kalman" class="btn btn-primary" disabled>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span id="apply-text">TIDAK ADA PERUBAHAN</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Algoritma -->
+      <div class="section">
+        <div class="section-title"><span class="sec-idx">02</span><h2>REFERENSI ALGORITMA</h2><div class="sep"></div></div>
+        <div class="card">
+          <div class="row gap-12 start">
+            <div class="ico-box ico-muted small">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+            <div>
+              <p class="ttl">Sequential 2-Stage Kalman Filter</p>
+              <p class="param-desc">Algoritma ini melakukan satu prediksi diikuti dua update sensor secara berurutan (HC-SR04 → GP2Y0A21). Output stage pertama menjadi prior untuk stage kedua, sehingga kedua sensor digabungkan dengan bobot otomatis berdasarkan parameter R-nya.</p>
+            </div>
+          </div>
+
+<pre class="code-block">// PREDICT
+P_pred = P + Q;
+
+// STAGE 1 — Ultrasonic update
+K1     = P_pred / (P_pred + R_ultra);
+x_upd1 = x + K1 * (z_ultra - x);
+P_upd1 = (1 - K1) * P_pred;
+
+// STAGE 2 — Infrared update (uses stage 1 output as prior)
+K2 = P_upd1 / (P_upd1 + R_ir);
+x  = x_upd1 + K2 * (z_ir - x_upd1);
+P  = (1 - K2) * P_upd1;</pre>
+
+          <div class="grid-3 gap-6">
+            <div class="ref-tile"><p class="lbl">DEFAULT Q</p><p class="big-num primary small">0.05</p><p class="hint">process noise</p></div>
+            <div class="ref-tile"><p class="lbl">DEFAULT Rᵤ</p><p class="big-num primary small">10.0</p><p class="hint">HC-SR04 variance</p></div>
+            <div class="ref-tile"><p class="lbl">DEFAULT Rᵢ</p><p class="big-num primary small">5.0</p><p class="hint">GP2Y0A21 variance</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============== FOOTER ============== -->
+  <footer class="app-footer">
+    <p>DESIGNED BY M DZIKRY R &amp; NAMIRA N. D</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
